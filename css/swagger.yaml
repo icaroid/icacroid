@@ -1,0 +1,532 @@
+openapi: 3.0.0
+info:
+  title: Third party Zero Balance model
+  version: 1.0.0
+  description: Model for third party antifraud-api development.
+  termsOfService: https://developers.pismo.io/terms/
+  contact:
+    name: API Support
+    email: support@pismo.com.br
+    url: https://developers.pismo.io/support/
+  license:
+    name: Copyright Pismo
+    url: https://developers.pismo.io/licenses/
+servers:
+  - url: https://third-party-server-example
+    description: Sandbox API server for testing
+  - url: https://third-party-server-example
+    description: API server for production
+components:
+  schemas:
+    Ingress:
+      type: object
+      description: Transaction payload
+      properties:
+        id:
+          type: string
+          description: Identifier corresponding to the database Transaction ID (for "entity":"transaction") or Card ID (for "entity":"card").
+          example: "1111"
+        entity:
+          type: string
+          description: Entity type descriptor.
+          enum: [transaction, card]
+          example: "transaction"
+        fields:
+          $ref: '#/components/schemas/Fields'
+      required:
+        - id
+        - entity
+        - fields
+    Fields:
+      type: object
+      description: The fields submitted through anti-fraud ingress requests. Please note that each entity type have some exclusive fields (Those fields have an additional note between []) all the default values are nullable but those which tag nullable -> false.
+      properties:
+        mti:
+          type: string
+          description: Message Type Identifier [entity:"transaction" only]
+          example: "0100"
+          nullable: false
+        card_id:
+          type: integer
+          description: Transaction cardholder card ID [entity:"transaction" only]
+          example: 1234
+        account_id:
+          type: integer
+          description: Transaction cardholder account ID [entity:"transaction" only]
+          example: 1234
+        wallet_id:
+          type: string
+          description: Wallet token id if transaction is made from a tokenized card [entity:"transaction" only]
+          example: "1111"
+        amount_transaction:
+          type: number
+          description: Transaction amount converted to the cardholder's billing currency [entity:"transaction" only]
+          example: 10.00
+          nullable: false
+        amount_local:
+          type: number
+          description: Transaction amount in merchant local currency [entity:"transaction" only]
+          example: 10.00
+          nullable: false
+        amount_settlement:
+          type: number
+          description: Transaction amount in U.S. dollar [entity:"transaction" only]
+          example: 10.00
+        transaction_timestamp:
+          type: string
+          description: Transaction date and hour (format:yyyy-MM-dd hh:mm:ss) [entity:"transaction" only]
+          example: "2019-05-09 15:52:00"
+          nullable: false
+        payment_card_brand:
+          type: string
+          description: Transaction brand information (card's brand used for transaction [entity:"transaction" only]
+          example: ["Mastercard", "Visa"]
+          nullable: false
+        currency:
+          type: string
+          description: Transaction country number of origin currency according to [ISO 4217](https://en.wikipedia.org/wiki/ISO_4217) [entity:"transaction" only]
+          example: "986"
+        country_code:
+          type: string
+          description: A code identifying the country where the card issuer is located (see [ISO 3166-1](https://en.wikipedia.org/wiki/ISO_3166-1)) [entity:"transaction" only]
+          example: "076"
+        merchant_id_code:
+          type: string
+          description: Merchant code as registered at the payments network database (Visa/Mastercard) [entity:"transaction" only]
+          example: "687555537877464"
+        merchant_name:
+          type: string
+          description: Merchant name as registered at the payments network database (Visa/Mastercard) [entity:"transaction" only]
+          example: "PISMO"
+        merchant_city:
+          type: string
+          description: Merchant city as registered at the payments network database (Visa/Mastercard) [entity:"transaction" only]
+          example: "SAO PAULO"
+        merchant_state_or_country_code:
+          type: string
+          description: Merchant country code outside USA OR Merchant state code from the USA OR Canadian province code from Canada (NOTE:Canadian merchants can either be represented through the province code or the canadian country code) [entity:"transaction" only]
+          example: "BRA"
+        merchant_terminal_id:
+          type: string
+          description: Terminal identifier at acquirer database
+          example: "12300004"
+        security_cnp_transaction:
+          type: string
+          description: Electronic commerce security indicator [entity:"transaction" only]
+          example: "123"
+          nullable: false
+        atc_chip:
+          type: string
+          description: Application Transaction Counter acquired from ISO8583 formatted payments network message [entity:"transaction" only]
+          example: "0043"
+        atc_database:
+          type: string
+          description: Application Transaction Counter acquired from authorization platform database [entity:"transaction" only]
+          example: "0043"
+        cvv_data:
+          type: string
+          description: Indicates the cvv validation response. Mastercard transactions:M = Valid CVC2; N = Invalid CVC2; CVC2 Not processed; P = CVC2 not processed (temporary unavailability); U = CVC2 not verified. Visa transactions:1 = CVV2 validation failed; 2 = Successful CVV2 verification; 3 = CVV2 not verified. [entity:"transaction" only]
+          enum: [M, N, P, U, 1, 2, 3]
+        entry_mode:
+          type: string
+          description: Transaction entry mode [entity:"transaction" only]
+        mcc:
+          type: string
+          description: Merchant Category Codes given from payments network [entity:"transaction" only]
+        chip_cryptogram_information_data:
+          type: string
+          description: Relevant information data from card holder chip [entity:"transaction" only]
+          example: ["80",""]
+          nullable: false
+        chip_transaction_date:
+          type: string
+          description: Transaction date from card holder chip (format date yyMMdd ) [entity:"transaction" only]
+          example: ["190425", ""]
+          nullable: false
+        chip_transaction_type:
+          type: string
+          description: Describes describes the specific transaction type. [entity:"transaction" only]
+          nullable: false
+        chip_amount_authorized:
+          type: string
+          description: Amount authorized for card holder (format:000000000010) [entity:"transaction" only]
+          example: ["000000000010", ""]
+          nullable: false
+        chip_transaction_currency_code:
+          type: string
+          description: Describes the specific currency code given [entity:"transaction" only]
+          example: ["0076", ""]
+          nullable: false
+        chip_application_interchange_profile:
+          type: string
+          description: Application interchange profile information [entity:"transaction" only]
+          example: ["0076", ""]
+          nullable: false
+        chip_terminal_country_code:
+          type: string
+          description: Terminal country code given from payment network [entity:"transaction" only]
+          example: ["0076",""]
+          nullable: false
+        chip_cardholder_verification_method:
+          type: string
+          description: Verification method used by card holder on authorization [entity:"transaction" only]
+          example: ["420300",""]
+          nullable: false
+        chip_terminal_capabilities:
+          type: string
+          description: Capability code given by POS, each code has the list of capabilities classified [entity:"transaction" only]
+          example: ["E0F0C8",""]
+          nullable: false
+        chip_amount_other:
+          type: string
+          description: If there is no cash back amount, the value of 9F03 is zero. 9F03 may be absent, or present with a zero value. (If there is a cash back amount, presence is mandatory)  [entity:"transaction" only]
+          nullable: false
+        chip_application_transaction_counter:
+          type: string
+          description: DE 120 (Record Data) contains Application Transaction Counter file data when DE 101 (File                Name) contains MCC109 [entity:"transaction" only]
+          example: ["3900",""]
+          nullable: false
+        cardholder_postal_code:
+          type: string
+          description: Postal code from card holder [entity:"transaction" only]
+          example: ["22222222",""]
+          nullable: false
+        transaction_type:
+          type: string
+          description:  The processing code describes the type of transaction the is beaing auhtorized [entity:"transaction" only]
+          example: "00 (purchase), 01 (withdrawal), '',  etc"
+          nullable: false
+        processing_code:
+          type: string
+          description: Describes the effect of a transaction on the customer account and the type of accounts affected [entity:"transaction" only]
+          example: ["001",""]
+          nullable: false
+        nsu:
+          type: string
+          description: NSU or STAN (System Trace Audit Number) is a message initiator assigns to uniquely identify a transaction [entity:"transaction" only]
+          example: "000001"
+        retrieval_reference_number:
+          type: string
+          description: Document reference number assigned by the acquirer [entity:"transaction" only]
+          example: "085000100001"
+        authorization_code:
+          type: string
+          description: Transaction response ID code assigned by authorizing institution [entity:"transaction" only]
+          example: ["1PCGNW",""]
+        response_code:
+          type: string
+          example: "05"
+          description: Defines the disposition of a previous message or an action taken as a result of receipt of a previous message. Response codes also are used to indicate approval or decline of a transaction. In the event an authorization is declined, the response code indicates the reason for rejection and may indicate an action to be taken. [entity:"transaction" only]
+        terminal_capability:
+          type: string
+          description: POS entry mode code [entity:"transaction" only]
+          nullable: false
+        tvr:
+          type: string
+          description: Terminal Verification Results this serves as notification of bit validation errors detected in the TVR within the Issuer Application data during M/Chip Cryptogram Validation processing. [entity:"transaction" only]
+          example: ["0000248000",""]
+          nullable: false
+        cvr:
+          type: string
+          description: Card Verification Results this serves as notification of bit validation errors detected in the CVR within the Issuer Application data during M/Chip Cryptogram Validation processing.[entity:"transaction" only]
+          example: ["0110A040002A00000000000000000000FF",""]
+          nullable: false
+        number_of_installments:
+          type: integer
+          description: Number of installments of an authorization [entity:"transaction" only]
+          example: 3
+        available_limit:
+          type: number
+          description: The available amount limit for payment mode authorized [entity:"transaction" only]
+          example: 200.55
+        network_score:
+          type: integer
+          description: Score given by payments network [entity:"transaction" only] empty field when no informationis present
+          example: 0
+        acquirer_code:
+          type: string
+          description: The acquirer code given by authorizer [entity:"transaction" only]
+        pos_postal_code:
+          type: string
+          description: Postal code of the terminal machine authorizer [entity:"transaction" only]
+          example: "22222222"
+        total_limit:
+          type: number
+          description: The total amount limit for payment mode authorized [entity:"transaction" and entity:"card" only]
+          example: 5000.00
+        denial_code:
+          type: string
+          description: When a transaction is denied before anti fraud, the denial code is sent [entity:"transaction" only]
+          example: must be given by api developer
+        financial_network_code:
+          type: string
+          description: Identifies the specific program or service (for example, the financial network, financial program, or card program) with which the transaction is associated.
+          example: MCC
+        banknet_reference_number:
+          type: string
+          description: Generated by the Authorization Platform for each originating message it routes.
+          example: ABC123
+        network_transaction_data:
+          type: string
+          description: Contains all non sensitive data sent by the brand, in json format.
+          deprecated: true
+        original_network_data:
+          type: string
+          description: Contains all non sensitive data sent by the brand, in json format.
+      required:
+        - mti
+        - card_id
+        - account_id
+        - amount_transaction
+        - amount_local
+        - transaction_timestamp
+        - currency
+        - processing_code
+        - authorization_code
+        - response_code
+
+    Response:
+      description: response body for anti-fraud service
+      properties:
+        response:
+          type: boolean
+          description: If transaction is approved or not
+          example: [true, false]
+        responseCode:
+          type: string
+          description: Describes the response code from authorization (note -> `00` for approved transactions and other codes for denial cases) [entity:"transaction" only]
+          example: 4
+        limitAmount:
+          type: number
+          description: Returns the limit available. An ordinary case is balance inquiry. Return `null` if there is no need to inform it. [entity:"transaction" only]
+          example: 12.34
+
+    Authorization:
+      type: object
+      description: The authorization payload that will simulate an real network credit/debit purchase.
+      required:
+        - card_id
+        - local_amount
+        - local_currency
+        - entry_mode
+        - merchant
+      properties:
+        card_id:
+          type: integer
+          description: The card identification that will be used to make the purchase.
+          example: 4923745
+        local_amount:
+          type: number
+          description: The local amount of the purchase. Used in domestic(intra-country) payments.
+          example: 12.35
+        local_currency:
+          type: string
+          description: The local currency code of the purchase. It must obey the ISO_4217 numeric code.
+          example: "986"
+          minLength: 3
+          maxLength: 3
+        settlement_amount:
+          type: number
+          description: The settlement amount of the purchase. This amount will be used as the purchase amount when the cardholder currency differs from the local_currency.
+          example: 12.35
+        entry_mode:
+          type: string
+          description: The entry mode of the purchase, it must be one of the supported entry modes of the iso8583 manuals.<br>
+            901 = magnetstrip, 051 = chip, 071 = contacless, 810 = ecommerce etc <br>
+            Ecommerce purchases will not generate transactions!
+          example: "051"
+          minLength: 3
+          maxLength: 4
+        processing_code:
+          type: string
+          description: The processing code of the purchase. <br>
+            if not provided, it will assume `00` (normal purchase)
+            Possible valid options - <br>
+            00=purchase, 01=withdrawl, 20=credit voucher
+            Refer to iso8583 manuals to get additional information.
+          example: "00"
+          minLength: 2
+          maxLength: 2
+        mti:
+          type: string
+          description: Message Type Identifier [entity:"transaction" only] <br> if not provided, it will assume `0100` <br>
+            Possible values - 0100 (normal authorization), 0400 (cancellation)
+          example: "0100"
+          minLength: 4
+          maxLength: 4
+        account_type:
+          type: string
+          description: The account type of the cardId, if the value '20' is specified it will affect the debit account of the card<br>
+            if not provided, it will assume `30` (credit account)
+          example: "30"
+          minLength: 2
+          maxLength: 2
+        invoice_address:
+          type: string
+          description: The invoice address of the purchase. Used by issuers to validate if the address typed by the cardholder is the correct address
+          example: "1382, avenue brazil park"
+          maxLength: 29
+        authorization_code:
+          type: string
+          description: The authoriation code the purchase. If not specified, we will generate a random 6 characters (0-9\A-Z) code. This can be used for reversals.
+          example: "AB0FD1"
+          minLength: 6
+          maxLength: 6
+        retrieval_reference_number:
+          type: string
+          description: The retrieval reference number of the purchase. If specified, it must be an unique value. This attribute will be used to refund past 0100 authorizations.
+          example: "0111000222112"
+          maxLength: 12
+        callback_url:
+          type: string
+          example: "my-cool-https-url.best.issuer"
+          description: This attribute is only used by zero balance issuers. <br>
+            If this attribute is specified, we will only do card validations. The decision of the authorization will be made by the requester.
+            If endpoint is not valid or url does not respond what we expect we will return the 96 error code (system error)
+            <br> The url must not contain `:` or `http`/`https`.  We will call your endpoint with the `https://` prefix.
+        merchant:
+          $ref: '#/components/schemas/Merchant'
+        installments:
+          $ref: '#/components/schemas/Installments'
+    AuthorizationResponse:
+      description: response body of our authorization endpoint
+      properties:
+        authorizationCode:
+          type: string
+          description: the authorization code generated or provided by the requester.
+          example: "1122AA"
+        responseCode:
+          type: string
+          description: The outcome of the authorization. <br>
+            `00` means approved <br>
+            `14` no card found or no acceptances configured.  <br>
+            `51` no limit available <br>
+            `57` card is not active <br>
+            `96` system failure or zero balance issuer timeout/error <br>
+            For other response codes check iso8583 manuals.
+          example: "00"
+        contractAmount:
+          type: number
+          description: The approved amount of the purchase. <br> Taxes or other rates may be included.
+          example: 120.12
+        matchAddress:
+          type: boolean
+          description: If the invoice address is specified, this attribute will check if the provided adress match the user address
+          example: false
+        matchPostalCode:
+          type: boolean
+          description: If the invoice address is specified, this attribute will check if the provided postal code matches the user postal code
+          example: false
+        postalFiveDigits:
+          type: boolean
+          description: If the invoice address is specified, this attribute will check if the provided address number matches the user address number.
+          example: false
+    Merchant:
+      type: object
+      description: The merchant of the purchase.
+      required:
+        - name
+      properties:
+        name:
+          type: string
+          description: The purchase name of the merchant.
+          example: "MERCHANT CO."
+          maxLength: 22
+        city:
+          type: string
+          description: The city of the merchant
+          example: "NEW YORK"
+          maxLength: 13
+        country:
+          type: string
+          description: The country of the merchant. Must obey ISO3166-1 literal 3-digit code
+          example: "USA"
+          minLength: 3
+          maxLength: 3
+        code:
+          type: string
+          description: The merchant category code (MCC). Must obbey current Visa or Mastercard MCC list
+          example: "0701"
+          minLength: 4
+          maxLength: 4
+    Installments:
+      type: object
+      description: The installments of the purchase
+      required:
+        - number
+      properties:
+        number:
+          type: integer
+          description: The installment number, it must be between 02-99
+          example: 2
+        with_interest:
+          type: boolean
+          description: The installment plan, if not specified it defaults to false which means that no charges will be applied to the installment values.
+          example: false
+
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  responses:
+    401UnauthorizedError:
+      description: Access token is missing or invalid.
+    404NotFound:
+      description: The specified resource was not found.
+    500InternalServerError:
+      description: Internal Server Error.
+security:
+  - BearerAuth: []
+tags:
+  - name: Third party anti-fraud
+    description: API to handle anti-fraud requests from Pismo transactions authorizer.
+    externalDocs:
+      url: https://developers.pismolabs.io/v1.0/reference#cards
+paths:
+  /server/rest/ingress:
+    post:
+      summary: Register cards/accounts information and performs transactions evaluation.
+      tags:
+        - 'Third party anti-fraud'
+      requestBody:
+        description: Form details
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        200:
+          $ref: '#/components/schemas/Response'
+        401:
+          $ref: '#/components/responses/401UnauthorizedError'
+        404:
+          $ref: '#/components/responses/404NotFound'
+        500:
+          $ref: '#/components/responses/500InternalServerError'
+  /v1/authorizations:
+    post:
+      summary: This endpoint will create an networkauthorization. Used to simulate credit/debit cards transactions.
+      tags:
+        - 'payment'
+      requestBody:
+        description: Form details
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Authorization'
+      responses:
+        "201":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthorizationResponse'
+        401:
+          $ref: '#/components/responses/401UnauthorizedError'
+        404:
+          $ref: '#/components/responses/404NotFound'
+        500:
+          $ref: '#/components/responses/500InternalServerError'

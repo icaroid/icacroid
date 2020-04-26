@@ -2,14 +2,36 @@
   <head>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <link rel="stylesheet" href="css/html-4k-video.css"  >
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
     <script>  
     function mandarParasaFelicidade() {
-  setTimeout(function(){ window.location.href = 'https://go.hotmart.com/P26297139J'; }, 5000);
-}  
+      var elements = [];
+      var data = [
+          {
+              "url":"https://go.hotmart.com/P26297139J" , "obs": "Se você quer emagrecer e não sabe por onde começar, clique<code> e descubra</code> <code></code>   o primeiro passo para sua vida nova."
+          },
+          {
+              "url":"https://go.hotmart.com/D26297651S" , "obs": "Ta precisando de uma grana<code> aprenda</code> <code></code>  as maravilhas da cozinha moderna e ganhe uma renda extra."
+          },
+          {
+              "url":"https://www.instagram.com/p/BzyIR3Tglbe/?igshid=yqq0nz7ohmjz" , "obs": "Problemas no relacionamento? <code>Apimente</code> <code></code> sua relação  e descubra como casais viraram <code>amantes</code>."
+          }
+      ];
+      var cnt = 1;
+        $.each( data, function( key, val ) {
+          var $div = $("<div class='row'><div class='row'><div class='col-md-8 mx-auto'><a onmouseout='javascript:window.location.href = ' "+val.url+"'' href='"+val.url+"'><p>"+val.obs+"</p></a><video playsinline='playsinline' autoplay='autoplay' muted='muted' loop='loop'><source src='videos/v"+cnt+".mp4' type='video/mp4'></video></div></div>").appendTo($("#content")), code;
+          console.log(val.url, val.obs, cnt);
+          
+          cnt ++;
+          
+        });
+      
+      setTimeout(function(){ ; }, 5000);
+    }  
     </script>
   </head>
-  <body onload="mandarParaaFelicidade()">
+  <body onload="mandarParasaFelicidade()">
     <header>
       <div class="overlay"></div>
       <video playsinline="playsinline" autoplay="autoplay" muted="muted" loop="loop">
@@ -26,20 +48,24 @@
     </header>
     
     <section class="my-5">
-      <div class="container">
-        <div class="row">
+      <div class="container" id="content">
+        <!-- <div class="row">
           <div class="col-md-8 mx-auto">
             <a onmouseout="javascript:window.location.href = 'https://go.hotmart.com/P26297139J'" href="https://go.hotmart.com/P26297139J"> <p>Se você quer emagrecer e não sabe por onde começar, clique<code> e descubra</code> <code></code>   o primeiro passo para sua vida nova.</p></a>
             <video playsinline="playsinline" autoplay="autoplay" muted="muted" loop="loop">
               <source src="videos/v1.mp4" type="video/mp4">
             </video> 
           </div>
+        </div>
+        <div class="row">
           <div class="col-md-8 mx-auto">
             <a onmouseout="javascript:window.location.href = 'https://go.hotmart.com/D26297651S'" href="https://go.hotmart.com/D26297651S"> <p>Ta precisando de uma grana<code> aprenda</code> <code></code>  as maravilhas da cozinha moderna e ganhe uma renda extra.</p></a>
             <video playsinline="playsinline" autoplay="autoplay" muted="muted" loop="loop">
               <source src="videos/v2.mp4" type="video/mp4">
             </video> 
           </div>
+        </div>
+        <div class="row">
           <div class="col-md-8 mx-auto">
             <a onmouseout="javascript:window.location.href = 'https://www.instagram.com/p/BzyIR3Tglbe/?igshid=yqq0nz7ohmjz'" href="https://www.instagram.com/p/BzyIR3Tglbe/?igshid=yqq0nz7ohmjz"> <p>Problemas no relacionamento? <code>Apimente</code> <code></code> sua relação  e descubra como casais viraram <code>amantes</code>.</p></a>           
             <video playsinline="playsinline" autoplay="autoplay" muted="muted" loop="loop">
@@ -49,12 +75,13 @@
               Created by <a href="https://startbootstrap.com">Icaro Corinthians</a>
             </p>
           </div>
-        </div>
+        </div> -->
       </div>
+    </div>
     </section>
     <footer id="sticky-footer" class="py-4 bg-dark text-white-50">
       <div class="container text-center">
-        <small>Copyright &copy; Icaro Corinthians 2020</small>
+        <p style="color: white;" >Copyright &copy; Icaro Corinthians 2020</p>
       </div>
     </footer>
   </body>
